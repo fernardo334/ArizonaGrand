@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARIZONA GRAND RP | Официальный сайт</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://via.placeholder.com/1920x1080/222/444');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+        }
+        
+        /* DDoS Protection Screen */
+        .ddos-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #121212;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            text-align: center;
+        }
+        
+        .ddos-text {
+            font-size: 24px;
+            margin: 10px 0;
+            color: #fff;
+            max-width: 80%;
+        }
+        
+        .ddos-footer {
+            position: absolute;
+            bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            display: none; /* Hidden by default */
+            position: relative;
+        }
+        
+        /* Login Button */
+        .login-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background-color: rgba(255,165,0,0.2);
+            color: #FFA500;
+            border: 1px solid #FFA500;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: rgba(255,165,0,0.4);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #121212;
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #FFA500;
+        }
+        
+        .modal-title {
+            color: #FFA500;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ccc;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            background-color: #222;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: white;
+        }
+        
+        .captcha {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .captcha-text {
+            font-size: 24px;
+            letter-spacing: 5px;
+            background-color: #222;
+            padding: 5px 10px;
+            border-radius: 5px;
+            user-select: none;
+        }
+        
+        .captcha-refresh {
+            background: none;
+            border: none;
+            color: #FFA500;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #FFA500;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #ffbb33;
+        }
+        
+        .success-message {
+            color: #4CAF50;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #121212;
+            z-index: 3000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+        }
+        
+        .admin-title {
+            color: #FFA500;
+            font-size: 24px;
+        }
+        
+        .close-admin {
+            background: none;
+            border: none;
+            color: #FFA500;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .admin-btn {
+            padding: 8px 15px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .admin-btn:hover {
+            background-color: #555;
+        }
+        
+        .admin-btn.export {
+            background-color: #4CAF50;
+        }
+        
+        .admin-btn.clear {
+            background-color: #f44336;
+        }
+        
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .users-table th, .users-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+        
+        .users-table th {
+            background-color: #222;
+            color: #FFA500;
+        }
+        
+        /* Rest of the styles remain the same */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 42px;
+            font-weight: bold;
+            color: #FFA500;
+            text-shadow: 2px 2px 4px #000;
+            margin-bottom: 10px;
+        }
+        
+        .slogan {
+            font-size: 18px;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+        
+        .download-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            text-align: center;
+            transition: all 0.3s;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .download-btn.pc {
+            background-color: #4CAF50;
+        }
+        
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+        }
+        
+        .requirements {
+            background-color: rgba(0,0,0,0.7);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .requirements-title {
+            color: #FFA500;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .platform {
+            margin-bottom: 25px;
+        }
+        
+        .platform-title {
+            color: #FFA500;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .spec-item {
+            margin-bottom: 10px;
+        }
+        
+        .spec-name {
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .spec-value {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .stores {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .store-btn {
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .store-btn:hover {
+            background-color: #555;
+        }
+        
+        .version-note {
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 32px;
+            }
+            
+            .slogan {
+                font-size: 16px;
+            }
+            
+            .download-btn {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+            
+            .login-btn {
+                top: 10px;
+                right: 10px;
+                padding: 5px 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- DDoS Protection Screen -->
+    <div class="ddos-screen" id="ddosScreen">
+        <h1>Обрабатываем ваш запрос, пожалуйста подождите...</h1>
+        <p>Все отлично, сейчас мы направим вас на сайт.</p>
+        <div class="ddos-footer">DDoS protection by React</div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container" id="mainContent">
+        <button class="login-btn" id="loginBtn">Войти</button>
+        
+        <div class="header">
+            <div class="logo">ARIZONA GRAND RP</div>
+            <div class="slogan">Многопользовательская онлайн игра с огромным открытым миром</div>
+        </div>
+        
+        <div class="download-section">
+            <button class="download-btn" id="androidDownload">
+                Скачать для Android
+            </button>
+            <button class="download-btn pc" id="pcDownload">
+                Скачать для PC
+            </button>
+        </div>
+        
+        <div class="requirements">
+            <h2 class="requirements-title">Системные требования</h2>
+            
+            <div class="platform">
+                <h3 class="platform-title">Android</h3>
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <div class="spec-name">ОС</div>
+                        <div class="spec-value">Android 5 и выше</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-name">Процессор</div>
+                        <div class="spec-value">От 1.2 ГГц</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-name">Оперативная память</div>
+                        <div class="spec-value">2 ГБ</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-name">Место на диске</div>
+                        <div class="spec-value">8 ГБ</div>
+                    </div>
+                </div>
+                
+                <div class="stores">
+                    <button class="store-btn">Play Market</button>
+                    <button class="store-btn">RuStore</button>
+                    <button class="store-btn">AppGallery</button>
+                </div>
+            </div>
+            
+            <div class="platform">
+                <h3 class="platform-title">PC (Windows)</h3>
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <div class="spec-name">Процессор</div>
+                        <div class="spec-value">Intel Core i5-6300</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-name">Видеокарта</div>
+                        <div class="spec-value">Nvidia GeForce 790 / 4GB</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-name">Оперативная память</div>
+                        <div class="spec-value">8 ГБ</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-name">Место на диске</div>
+                        <div class="spec-value">15 ГБ</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="version-note">Тестовая версия</div>
+        </div>
+    </div>
+    
+    <!-- Registration Modal -->
+    <div class="modal" id="registrationModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Регистрация</h2>
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="nickname">Никнейм:</label>
+                    <input type="text" id="nickname" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Пароль:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="form-group">
+                    <label>Капча:</label>
+                    <div class="captcha">
+                        <div class="captcha-text" id="captchaText">ABCD12</div>
+                        <button type="button" class="captcha-refresh" id="refreshCaptcha">↻</button>
+                    </div>
+                    <input type="text" id="captchaInput" placeholder="Введите капчу" required>
+                </div>
+                <button type="submit" class="submit-btn">Зарегистрироваться</button>
+                <div class="success-message" id="successMessage">
+                    Регистрация успешна! Закройте это окно.
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h2 class="admin-title">Админ-панель - Зарегистрированные пользователи</h2>
+            <button class="close-admin" id="closeAdmin">✕</button>
+        </div>
+        
+        <div class="admin-actions">
+            <button class="admin-btn export" id="exportBtn">Экспорт в JSON</button>
+            <button class="admin-btn clear" id="clearBtn">Очистить данные</button>
+        </div>
+        
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Никнейм</th>
+                    <th>Дата регистрации</th>
+                    <th>Время до очистки</th>
+                </tr>
+            </thead>
+            <tbody id="usersTableBody">
+                <!-- Users will be added here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // DDoS protection screen with 3 seconds delay
+        setTimeout(function() {
+            document.getElementById('ddosScreen').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+        }, 3000);
+        
+        // Store buttons functionality
+        document.querySelectorAll('.store-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Ссылки на магазины будут доступны в ближайшее время');
+            });
+        });
+        
+        // Registration system
+        const loginBtn = document.getElementById('loginBtn');
+        const registrationModal = document.getElementById('registrationModal');
+        const registrationForm = document.getElementById('registrationForm');
+        const captchaText = document.getElementById('captchaText');
+        const refreshCaptcha = document.getElementById('refreshCaptcha');
+        const successMessage = document.getElementById('successMessage');
+        const nicknameInput = document.getElementById('nickname');
+        const passwordInput = document.getElementById('password');
+        const captchaInput = document.getElementById('captchaInput');
+        
+        // Admin panel elements
+        const adminPanel = document.getElementById('adminPanel');
+        const closeAdmin = document.getElementById('closeAdmin');
+        const usersTableBody = document.getElementById('usersTableBody');
+        const exportBtn = document.getElementById('exportBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        
+        // Storage key
+        const STORAGE_KEY = 'arizona_rp_users';
+        const EXPIRATION_TIME = 60 * 60 * 1000; // 1 час в миллисекундах
+        
+        // Load registered users from localStorage
+        let registeredUsers = loadUsers();
+        let cleanupTimer = null;
+        
+        // Generate random captcha
+        function generateCaptcha() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < 6; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            captchaText.textContent = result;
+        }
+        
+        // Load users from localStorage with expiration check
+        function loadUsers() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            if (!data) return [];
+            
+            try {
+                const parsed = JSON.parse(data);
+                if (parsed.expires && parsed.expires < Date.now()) {
+                    localStorage.removeItem(STORAGE_KEY);
+                    return [];
+                }
+                return parsed.users || [];
+            } catch (e) {
+                return [];
+            }
+        }
+        
+        // Save users to localStorage with expiration
+        function saveUsers() {
+            const data = {
+                users: registeredUsers,
+                expires: Date.now() + EXPIRATION_TIME
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            
+            // Schedule cleanup
+            if (cleanupTimer) clearTimeout(cleanupTimer);
+            cleanupTimer = setTimeout(() => {
+                localStorage.removeItem(STORAGE_KEY);
+                registeredUsers = [];
+                updateUsersTable();
+            }, EXPIRATION_TIME);
+        }
+        
+        // Show registration modal
+        loginBtn.addEventListener('click', function() {
+            generateCaptcha();
+            registrationModal.style.display = 'flex';
+        });
+        
+        // Refresh captcha
+        refreshCaptcha.addEventListener('click', generateCaptcha);
+        
+        // Handle form submission
+        registrationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Check for admin login
+            if (nicknameInput.value === 'Fast_Rayn' && passwordInput.value === '4746') {
+                showAdminPanel();
+                registrationModal.style.display = 'none';
+                registrationForm.reset();
+                return;
+            }
+            
+            // Validate captcha
+            if (captchaInput.value !== captchaText.textContent) {
+                alert('Неверная капча!');
+                generateCaptcha();
+                return;
+            }
+            
+            // Register user
+            const user = {
+                id: Date.now(),
+                nickname: nicknameInput.value,
+                date: new Date().toLocaleString(),
+                timestamp: Date.now()
+            };
+            
+            registeredUsers.push(user);
+            saveUsers();
+            updateUsersTable();
+            
+            // Show success message
+            successMessage.style.display = 'block';
+            registrationForm.reset();
+            
+            // Hide modal after 2 seconds
+            setTimeout(function() {
+                registrationModal.style.display = 'none';
+                successMessage.style.display = 'none';
+            }, 2000);
+        });
+        
+        // Update users table in admin panel
+        function updateUsersTable() {
+            usersTableBody.innerHTML = '';
+            
+            if (registeredUsers.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="4" style="text-align: center;">Нет зарегистрированных пользователей</td>';
+                usersTableBody.appendChild(row);
+                return;
+            }
+            
+            registeredUsers.forEach(user => {
+                const expiresIn = new Date(user.timestamp + EXPIRATION_TIME);
+                const timeLeft = Math.max(0, expiresIn - Date.now());
+                const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.nickname}</td>
+                    <td>${user.date}</td>
+                    <td>${hoursLeft}ч ${minutesLeft}м</td>
+                `;
+                usersTableBody.appendChild(row);
+            });
+        }
+        
+        // Show admin panel
+        function showAdminPanel() {
+            adminPanel.style.display = 'block';
+            updateUsersTable();
+        }
+        
+        // Close admin panel
+        closeAdmin.addEventListener('click', function() {
+            adminPanel.style.display = 'none';
+        });
+        
+        // Export to JSON
+        exportBtn.addEventListener('click', function() {
+            const dataStr = JSON.stringify(registeredUsers, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'arizona_rp_users.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        });
+        
+        // Clear data
+        clearBtn.addEventListener('click', function() {
+            if (confirm('Вы уверены, что хотите очистить все данные о пользователях?')) {
+                registeredUsers = [];
+                localStorage.removeItem(STORAGE_KEY);
+                updateUsersTable();
+            }
+        });
+        
+        // Direct download functionality
+        document.getElementById('androidDownload').addEventListener('click', function() {
+            // Simulate download
+            const link = document.createElement('a');
+            link.href = 'https://drive.google.com/uc?export=download&id=1owJjnqY0OlnDGi14PGufMMPSNB4YWYK3';
+            link.download = 'ArizonaGrandRP_Android.apk';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+        
+        document.getElementById('pcDownload').addEventListener('click', function() {
+            // Simulate download
+            const link = document.createElement('a');
+            link.href = 'https://drive.google.com/uc?export=download&id=1oz0KePwLjsJPLABXhLj7FtwdyoV6snx5';
+            link.download = 'ArizonaGrandRP_PC.exe';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+        
+        // Check for admin login attempt when pressing Enter in password field
+        passwordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && nicknameInput.value === 'Fast_Rayn' && passwordInput.value === '4746') {
+                showAdminPanel();
+                registrationModal.style.display = 'none';
+                registrationForm.reset();
+            }
+        });
+        
+        // Initialize
+        generateCaptcha();
+    </script>
+</body>
+</html>
